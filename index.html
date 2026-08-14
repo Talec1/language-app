@@ -1,15 +1,84 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Language App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language RPG & Pokedex</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-    <h2>Tanners Language app</h2>
-    <p>
-        It is working
-    </p>
-</body>
 
+    <div id="game-container">
+
+        <!-- SCREEN 1: CHARACTER CREATION -->
+        <section id="screen-setup" class="screen active">
+            <h2>Welcome, Traveler!</h2>
+            <p>Set up your character before entering the world.</p>
+            
+            <div class="form-group">
+                <label for="char-name">Character Name:</label>
+                <input type="text" id="char-name" placeholder="Enter name..." value="Hero">
+            </div>
+
+            <div class="form-group">
+                <label>Choose Your Icon:</label>
+                <div class="icon-selector">
+                    <label><input type="radio" name="icon" value="🧙‍♂️" checked> 🧙‍♂️ Wizard</label>
+                    <label><input type="radio" name="icon" value="🗡️"> 🗡️ Adventurer</label>
+                    <label><input type="radio" name="icon" value="🌱"> 🌱 Botanist</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Choose Your Starting House:</label>
+                <div class="house-selector">
+                    <label><input type="radio" name="house" value="Cozy Cottage" checked> 🏡 Cozy Cottage (+5 Max Energy)</label>
+                    <label><input type="radio" name="house" value="Sturdy Cabin"> 🪵 Sturdy Cabin (+1 Strength)</label>
+                    <label><input type="radio" name="house" value="Garden Greenhouse"> 🌿 Greenhouse (+1 Farm)</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Allocate Base Stats (Points left: <span id="points-left">3</span>):</label>
+                <div class="stat-row">
+                    <span>Farm: <button onclick="adjustStat('farm', -1)">-</button> <span id="stat-farm">1</span> <button onclick="adjustStat('farm', 1)">+</button></span>
+                    <span>Culinary: <button onclick="adjustStat('culinary', -1)">-</button> <span id="stat-culinary">1</span> <button onclick="adjustStat('culinary', 1)">+</button></span>
+                    <span>Strength: <button onclick="adjustStat('strength', -1)">-</button> <span id="stat-strength">1</span> <button onclick="adjustStat('strength', 1)">+</button></span>
+                </div>
+            </div>
+
+            <button id="start-pretest-btn" class="primary-btn" onclick="completeSetup()">Begin Pre-Test</button>
+        </section>
+
+        <!-- SCREEN 2: PRE-TEST (Placeholder) -->
+        <section id="screen-pretest" class="screen">
+            <h2>Level Pre-Test</h2>
+            <p>Let's check your baseline vocabulary to skip what you already know!</p>
+            <div id="pretest-content">
+                <!-- Dynamic questions injected via app.js -->
+                <p><i>Pre-test question simulation...</i></p>
+                <button class="primary-btn" onclick="finishPretest()">Complete Pre-Test & Enter World</button>
+            </div>
+        </section>
+
+        <!-- SCREEN 3: WORLD MAP HUB (Placeholder) -->
+        <section id="screen-map" class="screen">
+            <header class="player-hud">
+                <span id="hud-name">Hero</span> | 
+                Coins: <span id="hud-coins">20</span> | 
+                Energy: <span id="hud-energy">50</span>/<span id="hud-max-energy">50</span>
+            </header>
+            <h2>World Map</h2>
+            <div class="map-grid">
+                <button class="map-node" onclick="alert('Opening Building 1: Mini-Game!')">🏛️ Vocab Academy</button>
+                <button class="map-node" onclick="alert('Opening Shop!')">🏪 Market & Shop</button>
+                <button class="map-node" onclick="alert('Opening House & Garden!')">🏡 Your House</button>
+                <button class="map-node" onclick="alert('Opening Job Board!')">📜 Job Board</button>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
 </html>
