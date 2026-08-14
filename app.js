@@ -30,38 +30,51 @@ function adjustStat(statName, amount) {
     document.getElementById(`stat-${statName}`).innerText = currentStats[statName];
 }
 
-// Switch between active screen views cleanly
+// Updated showScreen to auto-save location
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
     });
-    document.getElementById(screenId).classList.add('active');
+    
+    const target = document.getElementById(screenId);
+    if (target) {
+        target.classList.add('active');
+        gameState.player.currentScreen = screenId;
+        saveGame();
+    }
 }
 
-// Complete Character Setup -> Move to Pre-Test
-function completeSetup() {
+function chooseIcons() {
     const nameInput = document.getElementById('char-name').value.trim();
-    const selectedIcon = document.querySelector('input[name="icon"]:checked').value;
-    const selectedHouse = document.querySelector('input[name="house"]:checked').value;
-
     if (nameInput) {
         gameState.player.name = nameInput;
     }
-    gameState.player.icon = selectedIcon;
-    gameState.player.house = selectedHouse;
+    showScreen('screen-setup2');
+}
+
+function completeSetup() {
+    // Null safety check on radio inputs
+    const iconEl = document.querySelector('input[name="icon"]:checked');
+    const houseEl = document.querySelector('input[name="house"]:checked');
+
+    if (!iconEl || !houseEl) {
+        alert("Please select both an icon and a house!");
+        return;
+    }
+
+    gameState.player.icon = iconEl.value;
+    gameState.player.house = houseEl.value;
     gameState.player.stats = { ...currentStats };
 
-    // House perks check
-    if (selectedHouse === "Cozy Cottage") {
+    if (houseEl.value === "Cozy Cottage") {
         gameState.player.maxEnergy = 55;
         gameState.player.energy = 55;
-    } else if (selectedHouse === "Sturdy Cabin") {
+    } else if (houseEl.value === "Sturdy Cabin") {
         gameState.player.stats.strength += 1;
-    } else if (selectedHouse === "Garden Greenhouse") {
+    } else if (houseEl.value === "Garden Greenhouse") {
         gameState.player.stats.farm += 1;
     }
 
-    saveGame();
     showScreen('screen-pretest');
 }
 
@@ -85,11 +98,14 @@ function saveGame() {
     localStorage.setItem('language_rpg_save', JSON.stringify(gameState));
 }
 
-// Load from browser memory if it exists
+// Ensure the page restores the user to the exact screen they were on
 function loadGame() {
     const saved = localStorage.getItem('language_rpg_save');
     if (saved) {
         gameState = JSON.parse(saved);
+        if (gameState.player.currentScreen) {
+            showScreen(gameState.player.currentScreen);
+        }
     }
 }
 
