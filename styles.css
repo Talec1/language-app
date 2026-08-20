@@ -96,6 +96,32 @@ button {
     background-color: #4338ca;
 }
 
+.button-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.secondary-btn {
+    background-color: #3f3f46;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    flex: 1;
+}
+
+.secondary-btn:hover {
+    background-color: #52525b;
+}
+
+.primary-btn {
+    flex: 2; /* Gives the main action button more emphasis */
+}
+
 .player-hud {
     background: #27272a;
     padding: 8px 12px;
@@ -103,6 +129,25 @@ button {
     font-size: 0.9rem;
     font-weight: bold;
     text-align: center;
+}
+
+#pretest-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 16px 0;
+}
+
+.option-btn {
+    background-color: #27272a;
+    border: 1px solid #3f3f46;
+    text-align: center;
+    padding: 14px;
+    font-size: 1.05rem;
+}
+
+.option-btn:hover {
+    background-color: #3f3f46;
 }
 
 .map-grid {

@@ -52,15 +52,23 @@ function chooseIcons() {
     showScreen('screen-setup2');
 }
 
+// Vocabulary pool for the pre-test
+const pretestVocabulary = [
+    { id: "v1", word: "Manzana", correct: "Apple", options: ["Apple", "House", "Dog", "Book"] },
+    { id: "v2", word: "Gato", correct: "Cat", options: ["Water", "Cat", "Run", "Bread"] },
+    { id: "v3", word: "Casa", correct: "House", options: ["Tree", "Car", "House", "City"] },
+    { id: "v4", word: "Agua", correct: "Water", options: ["Milk", "Fire", "Earth", "Water"] },
+    { id: "v5", word: "Libro", correct: "Book", options: ["Book", "Phone", "Door", "Pencil"] }
+];
+
+let currentQuestionIndex = 0;
+
+// Update completeSetup to send players to the suggestion screen
 function completeSetup() {
-    // Null safety check on radio inputs
     const iconEl = document.querySelector('input[name="icon"]:checked');
     const houseEl = document.querySelector('input[name="house"]:checked');
 
-    if (!iconEl || !houseEl) {
-        alert("Please select both an icon and a house!");
-        return;
-    }
+    if (!iconEl || !houseEl) return;
 
     gameState.player.icon = iconEl.value;
     gameState.player.house = houseEl.value;
@@ -75,12 +83,66 @@ function completeSetup() {
         gameState.player.stats.farm += 1;
     }
 
+    saveGame();
+    showScreen('screen-suggests-pretest');
+}
+
+// Start the interactive pre-test loop
+function startPretest() {
+    currentQuestionIndex = 0;
+    renderQuestion();
     showScreen('screen-pretest');
 }
 
-// Finish Pre-Test -> Move to World Map Hub
+// Render current question and options dynamically into HTML
+function renderQuestion() {
+    const currentQ = pretestVocabulary[currentQuestionIndex];
+    const targetHeading = document.getElementById('target-word');
+    //const targetHeading = document.querySelector('#screen-pretest h1');
+    const contentDiv = document.getElementById('pretest-options');
+
+    if (!targetHeading || !contentDiv) return;
+
+    // Display target word
+    targetHeading.innerText = currentQ.word;
+
+    // Generate dynamic option buttons
+    contentDiv.innerHTML = currentQ.options.map((optionText) => {
+        // Escape quotes to prevent inline syntax errors
+        const safeText = optionText.replace(/'/g, "\\'");
+        return `<button class="primary-btn option-btn" onclick="PretestChoice('${safeText}')">${optionText}</button>`;
+    }).join('');
+}
+
+// Process selected option
+function PretestChoice(selectedAnswer) {
+    const currentQ = pretestVocabulary[currentQuestionIndex];
+
+    // Initialize dictionary in state if missing
+    if (!gameState.dictionary) {
+        gameState.dictionary = {};
+    }
+
+    // Record result in state
+    if (selectedAnswer === currentQ.correct) {
+        gameState.dictionary[currentQ.id] = { status: 'mastered', repetitions: 1, level: 1 };
+    } else {
+        gameState.dictionary[currentQ.id] = { status: 'learning', repetitions: 0, level: 0 };
+    }
+
+    currentQuestionIndex++;
+
+    // Advance to next question or complete test
+    if (currentQuestionIndex < pretestVocabulary.length) {
+        renderQuestion();
+    } else {
+        finishPretest();
+    }
+}
+
+// Finish pre-test and head to map
 function finishPretest() {
-    // Transition to map
+    saveGame();
     updateHUD();
     showScreen('screen-map');
 }
@@ -91,6 +153,11 @@ function updateHUD() {
     document.getElementById('hud-coins').innerText = gameState.player.coins;
     document.getElementById('hud-energy').innerText = gameState.player.energy;
     document.getElementById('hud-max-energy').innerText = gameState.player.maxEnergy;
+}
+
+function resetGame() {
+    localStorage.removeItem('language_rpg_save');
+    location.reload(); // Restarts the app from scratch
 }
 
 // Save to browser memory

@@ -52,18 +52,32 @@
                 </div>
             </div>
 
-            <button id="start-pretest-btn" class="primary-btn" onclick="completeSetup()">Begin Pre-Test</button>
+            <div class="button-row">
+                <button class="secondary-btn" onclick="showScreen('screen-setup')">← Back</button>
+                <button id="start-pretest-btn" class="primary-btn" onclick="completeSetup()">Begin Pre-Test</button>
+            </div>
+
         </section>
 
-        <!-- SCREEN 2: PRE-TEST (Placeholder) -->
-        <section id="screen-pretest" class="screen">
+        <!-- SCREEN 2A: Suggest PRE-TEST -->
+        <section id="screen-suggests-pretest" class="screen">
             <h2>Level Pre-Test</h2>
             <p>Let's check your baseline vocabulary to skip what you already know!</p>
-            <div id="pretest-content">
-                <!-- Dynamic questions injected via app.js -->
-                <p><i>Pre-test question simulation...</i></p>
-                <button class="primary-btn" onclick="finishPretest()">Complete Pre-Test & Enter World</button>
+            <div id="pretest-select">
+                <button class="primary-btn" onclick="startPretest()">Start Pre-Test</button>
+                <button class="primary-btn" onclick="finishPretest()">Skip Pre-Test & Enter World</button>
             </div>
+        </section>
+
+        <!-- Screen 2B: PreTest -->
+         <section id="screen-pretest" class="screen">
+            <p>Pick the best word meaning.</p>
+            <h1 id="target-word">Manzana</h1>
+            <div id="pretest-options"></div>
+
+            <button class="secondary-btn" onclick="finishPretest()" style="margin-top: 10px;">
+                Skip Pre-Test & Enter World
+            </button>
         </section>
 
         <!-- SCREEN 3: WORLD MAP HUB (Placeholder) -->
@@ -80,6 +94,7 @@
                 <button class="map-node" onclick="alert('Opening House & Garden!')">🏡 Your House</button>
                 <button class="map-node" onclick="alert('Opening Job Board!')">📜 Job Board</button>
             </div>
+            <button onclick="resetGame()" style="background: red; color: white;">Reset Character / Start Over</button>
         </section>
 
     </div>
