@@ -90,6 +90,7 @@
         </section>
 
         <!-- SCREEN 3: WORLD MAP HUB (Placeholder) -->
+        
         <section id="screen-map" class="screen">
             <header class="player-hud">
                 <span id="hud-name">Hero</span> | 
@@ -99,6 +100,7 @@
             <h2>World Map</h2>
             <div class="map-grid">
                 <button class="map-node" onclick="alert('Opening Building 1: Mini-Game!')">🏛️ Vocab Academy</button>
+                <button class="map-node" onclick="startThriftGame()">🏬 Thrift Shop Catch (5 Energy)</button>
                 <button class="map-node" onclick="alert('Opening Shop!')">🏪 Market & Shop</button>
                 <button class="map-node" onclick="alert('Opening House & Garden!')">🏡 Your House</button>
                 <button class="map-node" onclick="alert('Opening Job Board!')">📜 Job Board</button>
@@ -106,8 +108,60 @@
             <button onclick="resetGame()" style="background: red; color: white;">Reset Character / Start Over</button>
         </section>
 
+        <!-- SCREEN 3: WORLD MAP HUB 
+        <section id="screen-map" class="screen">
+            <h2>World Map</h2>
+            <p>Select a location to explore and practice!</p>
+
+            <div class="map-nodes">
+                <button class="map-node-btn" onclick="startOrchardGame()">
+                    🍎 <strong>The Orchard</strong>
+                    <small>(Cost: 5 Energy | Focus: Food Vocab)</small>
+                </button>
+                
+                <button class="map-node-btn disabled" disabled>
+                    🔒 <strong>The Library</strong>
+                    <small>(Unlocks at Level 2)</small>
+                </button>
+            </div>
+        </section> 
+        -->
+
+        <!-- SCREEN 4: THRIFT SHOP MINI-GAME -->
+        <section id="screen-game-thrift" class="screen">
+            <div class="game-header">
+                <div>
+                    <h2>🏬 Old Barnaby's Thrift Shop</h2>
+                    <p>Catch the item Barnaby calls out!</p>
+                </div>
+                <div class="game-stats">
+                    <div>Score: <span id="thrift-score">0</span></div>
+                    <div>Time: <span id="thrift-timer">30</span>s</div>
+                </div>
+            </div>
+
+            <!-- Target prompt displayed to player -->
+            <div class="prompt-box">
+                <span>Find the item: </span>
+                <h1 id="thrift-target-word">--</h1>
+            </div>
+
+            <!-- Active game area where items appear -->
+            <div id="thrift-play-area">
+                <!-- Dynamic catchable items injected here -->
+            </div>
+
+            <button class="secondary-btn" onclick="exitThriftGame()" style="margin-top: 15px;">
+                Leave Shop
+            </button>
+        </section>
+
     </div>
 
+    <!-- Load Core Framework First -->
     <script src="app.js"></script>
+
+    <!-- Load Mini-Game Modules Second -->
+    <script src="thrift-game.js"></script>
 </body>
 </html>
