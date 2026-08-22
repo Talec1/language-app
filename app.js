@@ -136,12 +136,54 @@ function PretestChoice(selectedAnswer) {
     if (currentQuestionIndex < pretestVocabulary.length) {
         renderQuestion();
     } else {
-        finishPretest();
+        finishPretestQuestions();
     }
 }
 
 // Finish pre-test and head to map
-function finishPretest() {
+function finishPretestQuestions() {
+    saveGame();
+    updateHUD();
+    renderAnswers();
+    showScreen('screen-pretest-results');
+}
+
+// Render chosen answers and correct question answers and question level number
+function renderAnswers() {
+    const contentDiv = document.getElementById('pretest-scores'); // div for inserting answers
+    if (!contentDiv) return;
+    let score = 0
+    const resultsHTML = pretestVocabulary.map(item => {
+        const wordResult = gameState.dictionary[item.id];
+        const isMastered = wordResult && wordResult.status === 'mastered';
+        if (isMastered){ 
+            score ++;
+        }
+        // 2. Return an HTML string for this word
+        return `
+            <div class="result-row ${isMastered ? 'mastered' : 'learning'}">
+                <span><strong>${item.word}</strong> (${item.correct})</span>
+                <span>${isMastered ? '✅ Mastered' : '📖 Need to Learn'}</span>
+            </div>
+        `;
+    }).join(''); // 3. Join the array of HTML strings into one single string
+
+    // 2. Calculate percentage
+    const totalWords = pretestVocabulary.length;
+    const percentage = Math.round((score / totalWords) * 100);
+
+    // 3. Build the score summary block
+    const summaryHTML = `
+        <div class="score-summary">
+            <p><strong>Final Score:</strong> ${score} / ${totalWords} (${percentage}%)</p>
+        </div>
+    `;
+
+    // 4. Inject both into the container
+    contentDiv.innerHTML = resultsHTML + summaryHTML;
+}
+
+function beginWorld() {
     saveGame();
     updateHUD();
     showScreen('screen-map');

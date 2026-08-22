@@ -138,6 +138,40 @@ button {
     margin: 16px 0;
 }
 
+#pretest-scores {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.result-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-radius: 6px;
+    background-color: #27272a;
+    border-left: 4px solid #71717a;
+}
+
+.result-row.mastered {
+    border-left-color: #22c55e; /* Green accent */
+}
+
+.result-row.learning {
+    border-left-color: #eab308; /* Yellow/Orange accent */
+}
+
+.score-summary {
+    margin-top: 16px;
+    padding: 12px;
+    background-color: #18181b;
+    border: 1px solid #3f3f46;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
 .option-btn {
     background-color: #27272a;
     border: 1px solid #3f3f46;
