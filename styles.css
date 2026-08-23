@@ -14,14 +14,25 @@ body {
     height: 100vh;
 }
 
+/* Base 500 px container for dialogue / menus */
 #game-container {
     width: 100%;
-    max-width: 500px;
+    max-width: 500px; /* Default narrow width for text readability */
     background: #1e1e24;
     border: 2px solid #2a2a35;
     border-radius: 12px;
     padding: 24px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    margin: 0 auto;
+    box-sizing: border-box;
+    transition: max-width 0.25s ease-in-out;
+}
+
+/* Expand container when Map or Thrift Shop is active */
+#game-container:has(#screen-map.active),
+#game-container:has(#screen-game-thrift.active) {
+    /* Scales to 92% of the monitor width, but caps at 1200px */
+    max-width: min(92vw, 1200px); 
 }
 
 /* ==========================================
@@ -30,7 +41,7 @@ body {
 .screen {
     display: none; /* Hides inactive screens */
     width: 100%;
-    max-width: 1024px;
+    max-width: 2048px;
     margin: 0 auto;
     padding: 20px;
     box-sizing: border-box;
@@ -194,38 +205,48 @@ button {
    WORLD MAP VISUAL VIEWPORT
    ========================================== */
    
+/* Constrain map viewport height so it fits vertically without scrolling */
 .map-viewport {
     position: relative;
     width: 100%;
-    max-width: 1024px; /* Sets map size to 1024px wide */
-    margin: 0 auto;
+    max-height: 70vh; /* Limits map height to 70% of screen height */
     overflow: hidden;
     border-radius: 12px;
     border: 3px solid #3f3f46;
+    margin: 0 auto;
+    /* Tracks container size for dynamic text/pin scaling */
+    container-type: inline-size;
 }
 
 .map-bg {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover; /* Maintains aspect ratio within the 70vh box */
     display: block;
 }
 
 .map-pin {
     position: absolute;
-    transform: translate(-50%, -50%); /* Centers the pin on exact percentage coordinates */
-    padding: 8px 14px;
+    /* Centers the button exactly on top of the percentage coordinates */
+    transform: translate(-50%, -50%); 
+
+    /* Dynamic font size and padding based on map width */
+    font-size: clamp(0.65rem, 1.6cqw, 1.1rem);
+    padding: clamp(3px, 0.8cqw, 8px) clamp(6px, 1.4cqw, 16px);
+    border-radius: clamp(10px, 2cqw, 20px);
+    border: clamp(1px, 0.2cqw, 3px) solid #eab308;
+
     background: rgba(24, 24, 27, 0.9);
-    border: 2px solid #eab308;
     color: white;
-    border-radius: 20px;
     font-weight: bold;
     cursor: pointer;
-    transition: transform 0.15s ease, background-color 0.15s ease;
+    white-space: nowrap; /* Prevents text from wrapping awkwardly on tiny screens */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 .map-pin:hover {
-    transform: translate(-50%, -60%) scale(1.08); /* Interactive hover float */
+    transform: translate(-50%, -60%) scale(1.15);
     background: #eab308;
     color: #18181b;
 }
