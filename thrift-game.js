@@ -94,7 +94,8 @@ function runThriftLoop() {
 }
 
 function updateBasket() {
-    const containerWidth = 600;
+    const container = document.getElementById('thrift-game-container');
+    const containerWidth = container ? container.clientWidth : 600;
 
     if (keysPressed['ArrowLeft'] || keysPressed['a']) {
         basketState.x -= basketState.speed;

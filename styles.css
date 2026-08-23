@@ -20,8 +20,8 @@ body {
     max-width: 500px; /* Default narrow width for text readability */
     background: #1e1e24;
     border: 2px solid #2a2a35;
-    border-radius: 12px;
-    padding: 24px;
+    border-radius: 10px;
+    padding: 0%;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     margin: 0 auto;
     box-sizing: border-box;
@@ -85,16 +85,29 @@ input[type="text"] {
     border: 1px solid #3f3f46;
 }
 
+/* Keep stats inline on wide screens, allow clean wrapping on narrow screens */
 .stat-row {
     display: flex;
-    justify-content: space-between;
-    background: #121216;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #3f3f46;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    align-items: center;
+    margin-top: 8px;
 }
 
-button {
+/* Treat each stat inline, but ensure it never splits up internally */
+.stat-row > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap; /* Locks label, [-], value, and [+] together */
+}
+
+/* Keep button dimensions locked so they stay neat */
+.stat-row button {
+    width: 26px;
+    height: 26px;
+    line-height: 1;
+    font-weight: bold;
     cursor: pointer;
 }
 
@@ -231,7 +244,7 @@ button {
     transform: translate(-50%, -50%); 
 
     /* Dynamic font size and padding based on map width */
-    font-size: clamp(0.65rem, 1.6cqw, 1.1rem);
+    font-size: clamp(0.3rem, 1.6cqw, 1.1rem);
     padding: clamp(3px, 0.8cqw, 8px) clamp(6px, 1.4cqw, 16px);
     border-radius: clamp(10px, 2cqw, 20px);
     border: clamp(1px, 0.2cqw, 3px) solid #eab308;
