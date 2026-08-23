@@ -18,6 +18,23 @@ let thriftGame = {
     currentTarget: null
 };
 
+let activeItems = [];
+let basketState = { x: 260, width: 80, speed: 8 };
+let keysPressed = {};
+let gameLoopId = null;
+let spawnTimer = 0;
+
+// Setup Event Listeners once
+window.addEventListener('keydown', (e) => keysPressed[e.key] = true);
+window.addEventListener('keyup', (e) => keysPressed[e.key] = false);
+
+// Optional Mouse Control
+document.getElementById('thrift-game-container')?.addEventListener('mousemove', (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    basketState.x = Math.max(0, Math.min(600 - basketState.width, mouseX - basketState.width / 2));
+});
+
 function startThriftGame() {
     // Reads from gameState defined in app.js
     if (gameState.player.energy < 5) {

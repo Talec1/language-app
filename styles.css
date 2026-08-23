@@ -184,59 +184,47 @@ button {
     background-color: #3f3f46;
 }
 
-.map-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 10px;
+/* ==========================================
+   WORLD MAP VISUAL VIEWPORT
+   ========================================== */
+   
+.map-viewport {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 3px solid #3f3f46;
 }
 
-.map-node {
-    padding: 20px;
-    background: #27272a;
-    border: 1px solid #3f3f46;
-    border-radius: 8px;
+.map-bg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.map-pin {
+    position: absolute;
+    transform: translate(-50%, -50%); /* Centers the pin on exact percentage coordinates */
+    padding: 8px 14px;
+    background: rgba(24, 24, 27, 0.9);
+    border: 2px solid #eab308;
     color: white;
+    border-radius: 20px;
     font-weight: bold;
-    text-align: center;
-    transition: transform 0.1s, background 0.2s;
-}
-
-.map-node:hover {
-    background: #3f3f46;
-    transform: translateY(-2px);
-}
-
-.map-nodes {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin: 20px 0;
-}
-
-.map-node-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 16px;
-    background-color: #27272a;
-    border: 2px solid #3f3f46;
-    border-radius: 8px;
-    color: white;
     cursor: pointer;
-    font-size: 1.1rem;
-    text-align: left;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
-.map-node-btn:hover:not(:disabled) {
-    border-color: #22c55e;
-    background-color: #3f3f46;
+.map-pin:hover {
+    transform: translate(-50%, -60%) scale(1.08); /* Interactive hover float */
+    background: #eab308;
+    color: #18181b;
 }
 
-.map-node-btn.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
+/* end map css */
 
 .game-header {
     display: flex;
@@ -331,3 +319,43 @@ button {
     background-color: #b91c1c !important; /* Red */
     border-color: #ef4444 !important;
 }
+
+/* interactive thrift start v */
+#thrift-game-container {
+    position: relative;
+    width: 600px;
+    height: 400px;
+    background: #18181b;
+    border: 3px solid #3f3f46;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+#thrift-basket {
+    position: absolute;
+    bottom: 10px;
+    left: 260px; /* Centered initially */
+    width: 80px;
+    height: 40px;
+    font-size: 2.5rem;
+    text-align: center;
+    line-height: 40px;
+    user-select: none;
+    pointer-events: none;
+}
+
+.falling-item {
+    position: absolute;
+    padding: 6px 12px;
+    background: #27272a;
+    border: 2px solid #eab308;
+    color: white;
+    border-radius: 8px;
+    font-weight: bold;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* interactive thrift end ^*/
