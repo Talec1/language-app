@@ -117,21 +117,21 @@
                 Energy: <span id="hud-energy">50</span>/<span id="hud-max-energy">50</span>
             </header>
             <h2>World Map</h2>
-            <div class="map-grid">
-                <!-- The main background illustration -->
+            <div class="map-viewport">
+                <!-- class="map-grid"   The main background illustration -->
                 <img src="assets/temp-world-map.jpg" alt="World Map" class="map-bg">
 
-                <!-- Interactive Hotspots pinned over the image -->
-                <button class="map-pin" style="top: 65%; left: 35%;" onclick="startThriftGame()">
-                    🏬 Thrift Shop
+                <!-- Interactive Hotspots pinned over the image 🏡 🏪 🏬  -->
+                <button class="map-pin" style="top: 60%; left: 85%;" onclick="startThriftGame()">
+                    Thrift Shop
                 </button>
 
-                <button class="map-pin" style="top: 40%; left: 50%;" onclick="openBuilding('market')">
-                    🏪 Market
+                <button class="map-pin" style="top: 10%; left: 50%;" onclick="openBuilding('market')">
+                    Market
                 </button>
 
-                <button class="map-pin" style="top: 75%; left: 20%;" onclick="openBuilding('house')">
-                    🏡 Home
+                <button class="map-pin" style="top: 54%; left: 10%;" onclick="openBuilding('house')">
+                    Home
                 </button>
             </div>
             <button onclick="resetGame()" style="background: red; color: white;">Reset Character / Start Over</button>

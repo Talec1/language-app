@@ -123,19 +123,20 @@ function spawnFallingItem() {
         tempPressure += thriftGame.targetPressureIncrease; // Increase chance for next spawn
     }
 
-    const startX = Math.random() * (600 - 100);
+    const container = document.getElementById('thrift-game-container');
+    const containerWidth = container ? container.clientWidth : 600;
+    const itemWidth = 90;
+
+    // Clamp spawn X so the entire item stays inside the container boundaries
+    const startX = Math.random() * (containerWidth - itemWidth);
     const startY = -40;
 
-    // Create DOM element
     const domEl = document.createElement('div');
     domEl.className = 'falling-item';
-    
-    // Set explicit positional CSS FIRST to stop top-left flashing
     domEl.style.left = `${startX}px`;
     domEl.style.top = `${startY}px`;
     domEl.innerHTML = `<span>${selectedItem.icon}</span> <span>${selectedItem.english}</span>`;
 
-    // Append to DOM after styling
     document.getElementById('thrift-items-layer').appendChild(domEl);
 
     activeItems.push({
@@ -143,14 +144,17 @@ function spawnFallingItem() {
         x: startX,
         y: startY,
         speed: 2.5 + Math.random() * 2,
-        width: 90,
+        width: itemWidth,
         height: 35,
         el: domEl
     });
 }
 
 function updateItems() {
-    const basketY = 400 - 50;
+    const container = document.getElementById('thrift-game-container');
+    const containerHeight = container ? container.clientHeight : 400;
+    const basketY = containerHeight - 50;
+
     const screenEl = document.getElementById('screen-game-thrift');
 
     for (let i = activeItems.length - 1; i >= 0; i--) {
@@ -186,8 +190,8 @@ function updateItems() {
             continue;
         }
 
-        // Remove item if it falls past floor
-        if (item.y > 400) {
+        // Clean up item when its top edge passes the container floor
+        if (item.y > containerHeight) {
             item.el.remove();
             activeItems.splice(i, 1);
         }
