@@ -111,6 +111,13 @@
         <!-- SCREEN 3: WORLD MAP -->
         <section id="screen-map" class="screen">
             <div class="map-viewport">
+                <header class="player-hud">
+                <span id="hud-name">Hero</span> | 
+                Coins: <span id="hud-coins">20</span> | 
+                Energy: <span id="hud-energy">50</span>/<span id="hud-max-energy">50</span>
+            </header>
+            <h2>World Map</h2>
+            <div class="map-grid">
                 <!-- The main background illustration -->
                 <img src="assets/temp-world-map.jpg" alt="World Map" class="map-bg">
 
@@ -127,12 +134,13 @@
                     🏡 Home
                 </button>
             </div>
+            <button onclick="resetGame()" style="background: red; color: white;">Reset Character / Start Over</button>
         </section>
 
         <!-- SCREEN 4: THRIFT SHOP MINI-GAME -->
         <section id="screen-game-thrift" class="screen">
             <div class="game-header">
-                <!--
+                
                 <div>
                     <h2>🏬 Old Barnaby's Thrift Shop</h2>
                     <p>Catch the item Barnaby calls out!</p>
@@ -143,17 +151,17 @@
                 </div>
             </div>
 
-            <-- Target prompt displayed to player --
+            <!-- Target prompt displayed to player -->
             <div class="prompt-box">
                 <span>Find the item: </span>
                 <h1 id="thrift-target-word">--</h1>
             </div>
 
-            <-- Active game area where items appear --
+            <!-- Active game area where items appear --
             <div id="thrift-play-area">
                 <-- Dynamic catchable items injected here --
-            </div>
-            -->
+            </div> -->
+            
 
             <div id="thrift-game-container">
                 <div id="thrift-basket">🧺</div>

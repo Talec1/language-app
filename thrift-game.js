@@ -1,5 +1,5 @@
 // ==========================================
-// THRIFT SHOP MINI-GAME MODULE
+// THRIFT SHOP FALLING ITEMS GAME MODULE
 // ==========================================
 
 const thriftItemsPool = [
@@ -36,80 +36,135 @@ document.getElementById('thrift-game-container')?.addEventListener('mousemove', 
 });
 
 function startThriftGame() {
-    // Reads from gameState defined in app.js
     if (gameState.player.energy < 5) {
         alert("Not enough energy! Rest up at home.");
         return;
     }
 
     gameState.player.energy -= 5;
-    saveGame();    // Defined in app.js
-    updateHUD();   // Defined in app.js
+    saveGame();
+    updateHUD();
 
+    // Reset game state
     thriftGame.score = 0;
     thriftGame.timeLeft = 30;
+    activeItems = [];
+    basketState.x = 260;
+    spawnTimer = 0;
+
     document.getElementById('thrift-score').innerText = thriftGame.score;
     document.getElementById('thrift-timer').innerText = thriftGame.timeLeft;
+    document.getElementById('thrift-items-layer').innerHTML = '';
 
-    showScreen('screen-game-thrift'); // Defined in app.js
-    nextThriftRound();
+    showScreen('screen-game-thrift');
+    setNextTargetWord();
 
+    // Start 1-second countdown timer
     clearInterval(thriftGame.timerId);
     thriftGame.timerId = setInterval(tickThriftTimer, 1000);
+
+    // Start 60fps Game Physics Loop
+    cancelAnimationFrame(gameLoopId);
+    runThriftLoop();
 }
 
-function nextThriftRound() {
-    const playArea = document.getElementById('thrift-play-area');
+function setNextTargetWord() {
     const targetEl = document.getElementById('thrift-target-word');
-    if (!playArea || !targetEl) return;
-
-    const shuffled = [...thriftItemsPool].sort(() => 0.5 - Math.random());
-    const roundChoices = shuffled.slice(0, 4);
-
-    thriftGame.currentTarget = roundChoices[Math.floor(Math.random() * roundChoices.length)];
-    targetEl.innerText = thriftGame.currentTarget.word;
-
-    playArea.innerHTML = roundChoices.map(item => `
-        <button class="thrift-item-btn" onclick="catchThriftItem('${item.id}', this)">
-            <span style="font-size: 2rem;">${item.icon}</span>
-            <span>${item.english}</span>
-        </button>
-    `).join('');
+    const randomItem = thriftItemsPool[Math.floor(Math.random() * thriftItemsPool.length)];
+    thriftGame.currentTarget = randomItem;
+    targetEl.innerText = randomItem.word;
 }
 
-function catchThriftItem(itemId, clickedElement) {
-    const screenEl = document.getElementById('screen-game-thrift');
-    const isCorrect = (itemId === thriftGame.currentTarget.id);
+function runThriftLoop() {
+    updateBasket();
+    updateItems();
 
-    // 1. Remove any leftover animation classes to re-trigger animation
-    screenEl.classList.remove('flash-correct', 'flash-incorrect');
-    
-    // Force a reflow so CSS animations restart cleanly
-    void screenEl.offsetWidth; 
-
-    // 2. Apply flash and button state
-    if (isCorrect) {
-        screenEl.classList.add('flash-correct');
-        if (clickedElement) clickedElement.classList.add('btn-correct');
-
-        thriftGame.score += 10;
-        document.getElementById('thrift-score').innerText = thriftGame.score;
-
-        if (!gameState.dictionary) gameState.dictionary = {};
-        gameState.dictionary[itemId] = { 
-            status: 'learning', 
-            reps: (gameState.dictionary[itemId]?.reps || 0) + 1 
-        };
-    } else {
-        screenEl.classList.add('flash-incorrect');
-        if (clickedElement) clickedElement.classList.add('btn-incorrect');
+    spawnTimer++;
+    if (spawnTimer % 80 === 0) { // Spawns an item roughly every 1.3 seconds
+        spawnFallingItem();
     }
 
-    // 3. Briefly pause before loading the next round so the visual registers
-    setTimeout(() => {
-        screenEl.classList.remove('flash-correct', 'flash-incorrect');
-        nextThriftRound();
-    }, 250);
+    gameLoopId = requestAnimationFrame(runThriftLoop);
+}
+
+function updateBasket() {
+    const containerWidth = 600;
+
+    if (keysPressed['ArrowLeft'] || keysPressed['a']) {
+        basketState.x -= basketState.speed;
+    }
+    if (keysPressed['ArrowRight'] || keysPressed['d']) {
+        basketState.x += basketState.speed;
+    }
+
+    basketState.x = Math.max(0, Math.min(containerWidth - basketState.width, basketState.x));
+
+    const basketEl = document.getElementById('thrift-basket');
+    if (basketEl) basketEl.style.left = `${basketState.x}px`;
+}
+
+function spawnFallingItem() {
+    const randomItem = thriftItemsPool[Math.floor(Math.random() * thriftItemsPool.length)];
+
+    const domEl = document.createElement('div');
+    domEl.className = 'falling-item';
+    domEl.innerHTML = `<span>${randomItem.icon}</span> <span>${randomItem.english}</span>`;
+    document.getElementById('thrift-items-layer').appendChild(domEl);
+
+    activeItems.push({
+        id: randomItem.id,
+        x: Math.random() * (600 - 100),
+        y: -40,
+        speed: 2 + Math.random() * 2,
+        width: 90,
+        height: 35,
+        el: domEl
+    });
+}
+
+function updateItems() {
+    const basketY = 400 - 50;
+    const screenEl = document.getElementById('screen-game-thrift');
+
+    for (let i = activeItems.length - 1; i >= 0; i--) {
+        const item = activeItems[i];
+
+        item.y += item.speed;
+        item.el.style.left = `${item.x}px`;
+        item.el.style.top = `${item.y}px`;
+
+        // Check AABB collision with basket
+        const hitX = (item.x + item.width > basketState.x) && (item.x < basketState.x + basketState.width);
+        const hitY = (item.y + item.height >= basketY) && (item.y <= basketY + 30);
+
+        if (hitX && hitY) {
+            screenEl.classList.remove('flash-correct', 'flash-incorrect');
+            void screenEl.offsetWidth; // Reflow to restart animation
+
+            if (item.id === thriftGame.currentTarget.id) {
+                // Correct item caught!
+                thriftGame.score += 10;
+                document.getElementById('thrift-score').innerText = thriftGame.score;
+                screenEl.classList.add('flash-correct');
+                
+                // Switch target word after catching target
+                setNextTargetWord();
+            } else {
+                // Wrong item caught!
+                screenEl.classList.add('flash-incorrect');
+            }
+
+            item.el.remove();
+            activeItems.splice(i, 1);
+            continue;
+        }
+
+        // Remove item if it falls past floor
+        if (item.y > 400) {
+            item.el.remove();
+            activeItems.splice(i, 1);
+        }
+    }
 }
 
 function tickThriftTimer() {
@@ -123,6 +178,7 @@ function tickThriftTimer() {
 
 function endThriftGame() {
     clearInterval(thriftGame.timerId);
+    cancelAnimationFrame(gameLoopId);
 
     const coinsEarned = Math.floor(thriftGame.score / 2);
     gameState.player.coins = (gameState.player.coins || 0) + coinsEarned;
@@ -135,5 +191,6 @@ function endThriftGame() {
 
 function exitThriftGame() {
     clearInterval(thriftGame.timerId);
+    cancelAnimationFrame(gameLoopId);
     showScreen('screen-map');
 }

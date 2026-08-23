@@ -189,6 +189,12 @@ function beginWorld() {
     showScreen('screen-map');
 }
 
+function startThriftGame() {
+    saveGame();
+    updateHUD();
+    showScreen('screen-game-thrift');
+}
+
 // Update HUD elements on the map screen
 function updateHUD() {
     document.getElementById('hud-name').innerText = `${gameState.player.icon} ${gameState.player.name}`;
