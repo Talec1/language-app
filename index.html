@@ -54,7 +54,8 @@
 
             <div class="button-row">
                 <button class="secondary-btn" onclick="showScreen('screen-setup')">← Back</button>
-                <button id="start-pretest-btn" class="primary-btn" onclick="completeSetup()">Begin Pre-Test</button>
+                <button class="primary-btn" onclick="startPretest()">Start Pre-Test</button>
+                <!--<button id="start-pretest-btn" class="primary-btn" onclick="completeSetup()">Begin Pre-Test</button> -->
             </div>
 
         </section>
@@ -65,7 +66,7 @@
             <p>Let's check your baseline vocabulary to skip what you already know!</p>
             <div id="pretest-select">
                 <button class="primary-btn" onclick="startPretest()">Start Pre-Test</button>
-                <button class="primary-btn" onclick="finishPretest()">Skip Pre-Test & Enter World</button>
+                <button class="primary-btn" onclick="beginWorld()">Skip Pre-Test & Enter World</button>
             </div>
         </section>
 
@@ -110,8 +111,7 @@
 
         <!-- SCREEN 3: WORLD MAP -->
         <section id="screen-map" class="screen">
-            <div class="map-viewport">
-                <header class="player-hud">
+            <header class="player-hud">
                 <span id="hud-name">Hero</span> | 
                 Coins: <span id="hud-coins">20</span> | 
                 Energy: <span id="hud-energy">50</span>/<span id="hud-max-energy">50</span>

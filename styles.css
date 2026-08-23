@@ -24,14 +24,20 @@ body {
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
 }
 
+/* ==========================================
+   SCREEN MANAGEMENT (Prevents screen overlap)
+   ========================================== */
 .screen {
-    display: none;
-    flex-direction: column;
-    gap: 16px;
+    display: none; /* Hides inactive screens */
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .screen.active {
-    display: flex;
+    display: block; /* Only shows active screen */
 }
 
 h2 {
@@ -191,7 +197,7 @@ button {
 .map-viewport {
     position: relative;
     width: 100%;
-    max-width: 1000px;
+    max-width: 1024px; /* Sets map size to 1024px wide */
     margin: 0 auto;
     overflow: hidden;
     border-radius: 12px;
@@ -320,16 +326,16 @@ button {
     border-color: #ef4444 !important;
 }
 
-/* interactive thrift start v */
+/* Match Thrift Shop arcade width to map size */
 #thrift-game-container {
     position: relative;
-    width: 600px;
-    height: 400px;
-    box-sizing: border-box; /* Ensures borders don't shrink inner area */
-    overflow: hidden;       /* Clips anything passing the container edges */
+    width: 100%;
+    max-width: 800px; /* Expands falling game area so it isn't squeezed */
+    height: 450px;
+    box-sizing: border-box;
+    overflow: hidden;
     background: #18181b;
     border: 3px solid #3f3f46;
-    overflow: hidden;
     margin: 0 auto;
 }
 
