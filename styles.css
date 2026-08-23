@@ -325,6 +325,8 @@ button {
     position: relative;
     width: 600px;
     height: 400px;
+    box-sizing: border-box; /* Ensures borders don't shrink inner area */
+    overflow: hidden;       /* Clips anything passing the container edges */
     background: #18181b;
     border: 3px solid #3f3f46;
     overflow: hidden;

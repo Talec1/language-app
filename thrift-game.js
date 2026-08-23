@@ -15,7 +15,9 @@ let thriftGame = {
     score: 0,
     timeLeft: 30,
     timerId: null,
-    currentTarget: null
+    currentTarget: null,
+    targetPressure: 0.15, // starting odds of spawn being target word 
+    targetPressureIncrease: 0.10 // increse in odds per spawn
 };
 
 let activeItems = [];
@@ -48,6 +50,8 @@ function startThriftGame() {
     // Reset game state
     thriftGame.score = 0;
     thriftGame.timeLeft = 30;
+    thriftGame.targetPressure = 0.15;
+    thriftGame.targetPressureIncrease = 0.10;
     activeItems = [];
     basketState.x = 260;
     spawnTimer = 0;
@@ -75,12 +79,14 @@ function setNextTargetWord() {
     targetEl.innerText = randomItem.word;
 }
 
+// Main Loop
 function runThriftLoop() {
     updateBasket();
     updateItems();
 
     spawnTimer++;
-    if (spawnTimer % 80 === 0) { // Spawns an item roughly every 1.3 seconds
+    if (spawnTimer > 50) { // Spawns an item after 50 frames, roughly every 0.7 seconds
+        spawnTimer = 0;
         spawnFallingItem();
     }
 
@@ -104,18 +110,39 @@ function updateBasket() {
 }
 
 function spawnFallingItem() {
-    const randomItem = thriftItemsPool[Math.floor(Math.random() * thriftItemsPool.length)];
+    let selectedItem;
+    let tempPressure = thriftGame.targetPressure;
+    const randomVal = Math.random();
 
+    // Check against current target pressure probability
+    if (randomVal < tempPressure) {
+        selectedItem = thriftGame.currentTarget;
+        tempPressure = thriftGame.targetPressure; // Reset back to base 15%
+    } else {
+        selectedItem = thriftItemsPool[Math.floor(Math.random() * thriftItemsPool.length)];
+        tempPressure += thriftGame.targetPressureIncrease; // Increase chance for next spawn
+    }
+
+    const startX = Math.random() * (600 - 100);
+    const startY = -40;
+
+    // Create DOM element
     const domEl = document.createElement('div');
     domEl.className = 'falling-item';
-    domEl.innerHTML = `<span>${randomItem.icon}</span> <span>${randomItem.english}</span>`;
+    
+    // Set explicit positional CSS FIRST to stop top-left flashing
+    domEl.style.left = `${startX}px`;
+    domEl.style.top = `${startY}px`;
+    domEl.innerHTML = `<span>${selectedItem.icon}</span> <span>${selectedItem.english}</span>`;
+
+    // Append to DOM after styling
     document.getElementById('thrift-items-layer').appendChild(domEl);
 
     activeItems.push({
-        id: randomItem.id,
-        x: Math.random() * (600 - 100),
-        y: -40,
-        speed: 2 + Math.random() * 2,
+        id: selectedItem.id,
+        x: startX,
+        y: startY,
+        speed: 2.5 + Math.random() * 2,
         width: 90,
         height: 35,
         el: domEl
