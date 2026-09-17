@@ -1,7 +1,7 @@
 // ==========================================
 // THRIFT SHOP FALLING ITEMS GAME MODULE
 // ==========================================
-
+/*
 const thriftItemsPool = [
     { id: "t1", word: "Silla", english: "Chair", icon: "🪑" },
     { id: "t2", word: "Reloj", english: "Clock", icon: "⏰" },
@@ -9,6 +9,14 @@ const thriftItemsPool = [
     { id: "t4", word: "Lámpara", english: "Lamp", icon: "💡" },
     { id: "t5", word: "Cámara", english: "Camera", icon: "📷" },
     { id: "t6", word: "Espejo", english: "Mirror", icon: "🪞" }
+];*/
+// In thrift-game.js - Match IDs with vocabDatabase
+const thriftItemsPool = [
+    { id: "v1", word: "Manzana", english: "Apple", icon: "🍎" },
+    { id: "v2", word: "Gato", english: "Cat", icon: "🐱" },
+    { id: "v3", word: "Casa", english: "House", icon: "🏠" },
+    { id: "v4", word: "Agua", english: "Water", icon: "💧" },
+    { id: "v5", word: "Libro", english: "Book", icon: "📖" }
 ];
 
 let thriftGame = {
@@ -72,6 +80,7 @@ function setNextTargetWord() {
     const randomItem = thriftItemsPool[Math.floor(Math.random() * thriftItemsPool.length)];
     thriftGame.currentTarget = randomItem;
     targetEl.innerText = randomItem.word;
+    markWordAsSeen(randomItem.id);
 }
 
 // Main Loop
@@ -206,12 +215,15 @@ function updateItems() {
                 thriftGame.score += 10;
                 document.getElementById('thrift-score').innerText = thriftGame.score;
                 screenEl.classList.add('flash-correct');
+
+                // Increment dictionary progress
+                markWordAsCorrect(item.id);
                 
                 // Switch target word after catching target
                 setNextTargetWord();
             } else {
                 // Wrong item caught!
-                screenEl.classList.add('flash-incorrect');
+                //screenEl.classList.add('flash-incorrect');
             }
 
             item.el.remove();
@@ -253,4 +265,28 @@ function exitThriftGame() {
     clearInterval(thriftGame.timerId);
     cancelAnimationFrame(gameLoopId);
     showScreen('screen-map');
+}
+
+// Marks a word as 'seen' in the dictionary if not already present
+function markWordAsSeen(wordId) {
+    if (!gameState.dictionary) gameState.dictionary = {};
+    if (!gameState.dictionary[wordId]) {
+        gameState.dictionary[wordId] = { status: 'learning', repetitions: 0, level: 0 };
+        saveGame();
+    }
+}
+
+// Increments correct count and updates status to 'mastered' when caught
+function markWordAsCorrect(wordId) {
+    if (!gameState.dictionary) gameState.dictionary = {};
+    
+    if (!gameState.dictionary[wordId]) {
+        gameState.dictionary[wordId] = { status: 'learning', repetitions: 1, level: 0 };
+    } else {
+        gameState.dictionary[wordId].repetitions = (gameState.dictionary[wordId].repetitions || 0) + 1;
+        if (gameState.dictionary[wordId].repetitions >= 2) {
+            gameState.dictionary[wordId].status = 'mastered';
+        }
+    }
+    saveGame();
 }

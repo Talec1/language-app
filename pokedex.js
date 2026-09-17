@@ -54,7 +54,62 @@ const vocabDatabase = [
             { es: "Leo un libro interesante.", en: "I am reading an interesting book." },
             { es: "El libro está sobre la mesa.", en: "The book is on the table." }
         ]
-    }
+    },
+    {
+        id: "v6",
+        number: "006",
+        word: "Silla",
+        english: "Chair",
+        image: "🪑",
+        sentences: [
+            { es: "na", en: "na" },
+            { es: "na", en: "na" }
+        ]
+    },
+    {
+        id: "v7",
+        number: "007",
+        word: "Reloj",
+        english: "Clock",
+        image: "⏰",
+        sentences: [
+            { es: "na", en: "na" },
+            { es: "na", en: "na" }
+        ]
+    },
+    {
+        id: "v8",
+        number: "008",
+        word: "Lámpara",
+        english: "Lamp",
+        image: "💡",
+        sentences: [
+            { es: "na", en: "na" },
+            { es: "na", en: "na" }
+        ]
+    },
+    {
+        id: "v9",
+        number: "009",
+        word: "Cámara",
+        english: "Camera",
+        image: "📷",
+        sentences: [
+            { es: "na", en: "na" },
+            { es: "na", en: "na" }
+        ]
+    },
+    {
+        id: "v10",
+        number: "010",
+        word: "Espejo",
+        english: "Mirror",
+        image: "🪞",
+        sentences: [
+            { es: "na", en: "na" },
+            { es: "na", en: "na" }
+        ]
+    },
 ];
 
 let currentDetailIndex = 0;
