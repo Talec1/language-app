@@ -30,13 +30,6 @@ let spawnTimer = 0;
 window.addEventListener('keydown', (e) => keysPressed[e.key] = true);
 window.addEventListener('keyup', (e) => keysPressed[e.key] = false);
 
-// Optional Mouse Control
-document.getElementById('thrift-game-container')?.addEventListener('mousemove', (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    basketState.x = Math.max(0, Math.min(600 - basketState.width, mouseX - basketState.width / 2));
-});
-
 function startThriftGame() {
     if (gameState.player.energy < 5) {
         alert("Not enough energy! Rest up at home.");
@@ -46,6 +39,7 @@ function startThriftGame() {
     gameState.player.energy -= 5;
     saveGame();
     updateHUD();
+    
 
     // Reset game state
     thriftGame.score = 0;
@@ -61,6 +55,7 @@ function startThriftGame() {
     document.getElementById('thrift-items-layer').innerHTML = '';
 
     showScreen('screen-game-thrift');
+    setupThriftInputListeners();
     setNextTargetWord();
 
     // Start 1-second countdown timer
@@ -91,6 +86,39 @@ function runThriftLoop() {
     }
 
     gameLoopId = requestAnimationFrame(runThriftLoop);
+}
+
+// Call this once during initialization or startThriftGame()
+function setupThriftInputListeners() {
+    const container = document.getElementById('thrift-game-container');
+    if (!container || container.dataset.listenersBound) return;
+
+    const moveBasketToPointer = (clientX) => {
+        const rect = container.getBoundingClientRect();
+        const containerWidth = container.clientWidth;
+        
+        // Calculate relative offset inside container
+        const relativeX = clientX - rect.left;
+        
+        // Center basket on cursor/finger and clamp between 0 and right edge
+        basketState.x = Math.max(0, Math.min(containerWidth - basketState.width, relativeX - basketState.width / 2));
+        
+        // Render immediately
+        const basketEl = document.getElementById('thrift-basket');
+        if (basketEl) basketEl.style.left = `${basketState.x}px`;
+    };
+
+    // Desktop Mouse Drag
+    container.addEventListener('mousemove', (e) => moveBasketToPointer(e.clientX));
+
+    // Mobile Touch Drag
+    container.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+            moveBasketToPointer(e.touches[0].clientX);
+        }
+    }, { passive: true });
+
+    container.dataset.listenersBound = "true";
 }
 
 function updateBasket() {
