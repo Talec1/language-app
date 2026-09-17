@@ -33,6 +33,7 @@ let basketState = { x: 260, width: 80, speed: 8 };
 let keysPressed = {};
 let gameLoopId = null;
 let spawnTimer = 0;
+let nextSpawnInterval = 30; // Default frame target
 
 // Setup Event Listeners once
 window.addEventListener('keydown', (e) => keysPressed[e.key] = true);
@@ -51,7 +52,8 @@ function startThriftGame() {
 
     // Reset game state
     thriftGame.score = 0;
-    thriftGame.timeLeft = 30;
+    thriftGame.timeMax = 30;
+    thriftGame.timeLeft = thriftGame.timeMax;
     thriftGame.targetPressure = 0.15;
     thriftGame.targetPressureIncrease = 0.10;
     activeItems = [];
@@ -83,14 +85,15 @@ function setNextTargetWord() {
     markWordAsSeen(randomItem.id);
 }
 
-// Main Loop
 function runThriftLoop() {
     updateBasket();
     updateItems();
 
     spawnTimer++;
-    if (spawnTimer > 50) { // Spawns an item after 50 frames, roughly every 0.7 seconds
+    if (spawnTimer >= nextSpawnInterval) {
         spawnTimer = 0;
+        // Pick new interval ONCE per spawn (~0.33s to ~0.75s)
+        nextSpawnInterval = 25 + Math.floor(Math.random() * 35); 
         spawnFallingItem();
     }
 
@@ -181,7 +184,7 @@ function spawnFallingItem() {
         id: selectedItem.id,
         x: startX,
         y: startY,
-        speed: 2.5 + Math.random() * 2,
+        speed: (2.1 + Math.random() * 2) * (2 - thriftGame.timeLeft / thriftGame.timeMax ),
         width: itemWidth,
         height: 35,
         el: domEl
@@ -223,6 +226,7 @@ function updateItems() {
                 setNextTargetWord();
             } else {
                 // Wrong item caught!
+                thriftGame.score -= 1;
                 //screenEl.classList.add('flash-incorrect');
             }
 
