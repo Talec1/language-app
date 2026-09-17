@@ -133,6 +133,11 @@
                 <button class="map-pin" style="top: 59%; left: 13%;" onclick="openBuilding('house')">
                     Home
                 </button>
+
+                <!-- Map Pin inside #screen-map -->
+                <button class="map-pin" style="top: 20%; left: 80%;" onclick="openPokedex()">
+                    📖 Pokédex
+                </button>
             </div>
             <button onclick="resetGame()" style="background: red; color: white;">Reset Character / Start Over</button>
         </section>
@@ -174,6 +179,49 @@
             </button>
         </section>
 
+        <!-- SCREEN 5: POKEDEX LIST -->
+        <section id="screen-pokedex" class="screen">
+            <div class="pokedex-header">
+                <h2>📖 Word Pokédex</h2>
+                <span id="pokedex-progress">0 / 0 Unlocked</span>
+            </div>
+
+            <div id="pokedex-list" class="pokedex-grid">
+                <!-- Dynamic list injected here -->
+            </div>
+
+            <button class="secondary-btn" onclick="showScreen('screen-map')" style="margin-top: 15px;">
+                ← Back to Map
+            </button>
+        </section>
+
+        <!-- SCREEN 6: WORD DETAILS PAGE -->
+        <section id="screen-word-details" class="screen">
+            <div class="detail-header">
+                <button class="secondary-btn" onclick="openPokedex()">← Pokédex</button>
+                <span id="detail-number">#001</span>
+                <span id="detail-icon-status">👁️</span>
+            </div>
+
+            <div class="detail-card">
+                <div id="detail-image" class="detail-img-box">🍎</div>
+                <div class="detail-title-group">
+                    <h1 id="detail-word">Manzana</h1>
+                    <p id="detail-translation">Apple</p>
+                    <button class="audio-btn" onclick="playWordAudio()">🔊 Pronounce</button>
+                </div>
+            </div>
+
+            <h3>Example Sentences</h3>
+            <div id="detail-sentences" class="sentences-list">
+                <!-- Sentences injected here -->
+            </div>
+
+            <button class="primary-btn" onclick="nextWordDetails()" style="margin-top: 15px; width: 100%;">
+                Next Word →
+            </button>
+        </section>
+
     </div>
 
     <!-- Load Core Framework First -->
@@ -181,5 +229,6 @@
 
     <!-- Load Mini-Game Modules Second -->
     <script src="thrift-game.js"></script>
+    <script src="pokedex.js"></script>
 </body>
 </html>
